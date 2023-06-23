@@ -9,9 +9,9 @@ jobs:
   build-push:
     strategy:
       matrix:
-        target: [base, docker]
+        target: [base, docker, rust]
 
-    runs-on: ubuntu-latest
+    runs-on: debian-docker
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
