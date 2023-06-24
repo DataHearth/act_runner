@@ -10,7 +10,7 @@ alias ba := build-all
 alias pa := push-all
 
 build TARGET:
-  @docker buildx build --push -t {{base_img_name}}:{{TARGET}} \
+  @docker buildx build --no-cache --push -t {{base_img_name}}:{{TARGET}} \
     --target {{TARGET}} \
     --cache-to type=registry,ref={{base_img_name}}:{{TARGET}}-cache,mode=max \
     --cache-from type=registry,ref={{base_img_name}}:{{TARGET}}-cache .

@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: gitea.antoine-langlois.net
-  REPOSITORY: dataheart/act_runner
+  REPOSITORY: datahearth/act_runner
 
 jobs:
   build-push:
