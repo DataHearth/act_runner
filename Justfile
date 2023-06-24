@@ -10,30 +10,30 @@ alias ba := build-all
 alias pa := push-all
 
 build TARGET:
-  @docker build -t datahearth/act_runner:{{TARGET}} \
+  @docker buildx build --push -t {{base_img_name}}:{{TARGET}} \
     --target {{TARGET}} \
-    --cache-to type=inline \
-    --cache-from type=registry,ref=datahearth/act_runner:{{TARGET}} .
-  @docker tag datahearth/act_runner:{{TARGET}} {{gitea_img_name}}:{{TARGET}}
+    --cache-to type=registry,ref={{base_img_name}}:{{TARGET}}-cache,mode=max \
+    --cache-from type=registry,ref={{base_img_name}}:{{TARGET}}-cache .
+  @docker tag {{base_img_name}}:{{TARGET}} {{gitea_img_name}}:{{TARGET}}
 
 push TARGET: (build TARGET)
   @docker push datahearth/act_runner:{{TARGET}}
   @docker push {{gitea_img_name}}:{{TARGET}}
 
 build-all:
-  #!/usr/local/bin/zsh
+  #!/usr/bin/env zsh
   for target in {{all_targets}}; do
     echo "Building $target";
-    docker build -t datahearth/act_runner:$target \
+    docker buildx build --push -t {{base_img_name}}:$target \
       --target $target \
-      --cache-to type=inline \
-      --cache-from type=registry,ref=datahearth/act_runner:$target .;
+      --cache-to type=registry,ref={{base_img_name}}:$target-cache,mode=max \
+      --cache-from type=registry,ref={{base_img_name}}:$target-cache .;
 
-    docker tag datahearth/act_runner:$target {{gitea_img_name}}:$target;
+    docker tag {{base_img_name}}:$target {{gitea_img_name}}:$target;
   done
 
 push-all: build-all
-  #!/usr/local/bin/zsh
+  #!/usr/bin/env zsh
   for target in {{all_targets}}; do
     echo "Pushing $target";
     docker push datahearth/act_runner:$target;

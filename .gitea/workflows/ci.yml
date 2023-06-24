@@ -43,9 +43,8 @@ jobs:
         with:
           push: true
           target: ${{ matrix.target }}
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
-          cache-from: type=registry,ref=${{ env.REPOSITORY }}:${{ matrix.target }}
+          cache-to: type=registry,ref=${{ env.REPOSITORY }}:${{ matrix.target }}-cache,mode=max
+          cache-from: type=registry,ref=${{ env.REPOSITORY }}:${{ matrix.target }}-cache
           tags: |
             ${{ env.REPOSITORY }}:${{ matrix.target }}
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ matrix.target }}
