@@ -10,10 +10,10 @@ alias ba := build-all
 alias pa := push-all
 
 build TARGET:
-  @docker buildx build --no-cache --push -t {{base_img_name}}:{{TARGET}} \
+  @docker build -t {{base_img_name}}:{{TARGET}} \
     --target {{TARGET}} \
-    --cache-to type=registry,ref={{base_img_name}}:{{TARGET}}-cache,mode=max \
-    --cache-from type=registry,ref={{base_img_name}}:{{TARGET}}-cache .
+    --cache-to type=inline \
+    --cache-from type=registry,ref={{base_img_name}}:{{TARGET}} .
   @docker tag {{base_img_name}}:{{TARGET}} {{gitea_img_name}}:{{TARGET}}
 
 push TARGET: (build TARGET)
@@ -24,10 +24,10 @@ build-all:
   #!/usr/bin/env zsh
   for target in {{all_targets}}; do
     echo "Building $target";
-    docker buildx build --push -t {{base_img_name}}:$target \
+    docker build -t {{base_img_name}}:$target \
       --target $target \
-      --cache-to type=registry,ref={{base_img_name}}:$target-cache,mode=max \
-      --cache-from type=registry,ref={{base_img_name}}:$target-cache .;
+      --cache-to type=inline \
+      --cache-from type=registry,ref={{base_img_name}}:$target .;
 
     docker tag {{base_img_name}}:$target {{gitea_img_name}}:$target;
   done

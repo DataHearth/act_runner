@@ -44,8 +44,8 @@ jobs:
           context: .
           push: true
           target: ${{ matrix.target }}
-          cache-to: type=registry,ref=${{ env.REPOSITORY }}:${{ matrix.target }}-cache,mode=max
-          cache-from: type=registry,ref=${{ env.REPOSITORY }}:${{ matrix.target }}-cache
+          cache-to: type=inline
+          cache-from: type=registry,ref=${{ env.REPOSITORY }}:${{ matrix.target }}
           tags: |
             ${{ env.REPOSITORY }}:${{ matrix.target }}
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ matrix.target }}
