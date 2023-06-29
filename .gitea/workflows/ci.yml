@@ -16,6 +16,7 @@ jobs:
     name: Build and push base image
 
     runs-on: debian-docker
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -51,7 +52,8 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:base
 
   build-push-matrix:
-    name: Build and push ${{ matrix.target }} image
+    name: Build and push targets image
+
     needs: build-push-base
     runs-on: debian-docker
 
