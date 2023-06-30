@@ -51,8 +51,18 @@ jobs:
             ${{ env.REPOSITORY }}:base
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:base
 
+      - name: Pull new image on runner
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.RUNNER_DEBIAN_HOST }}
+          username: ${{ secrets.RUNNER_DEBIAN_USERNAME }}
+          password: ${{ secrets.RUNNER_DEBIAN_PASSWORD }}
+          script: |
+            docker pull ${{ env.REPOSITORY }}:base
+            docker pull ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:base
+
   build-push-matrix:
-    name: Build and push targets image
+    name: Build and push target image
 
     needs: build-push-base
     runs-on: debian-docker
@@ -96,3 +106,13 @@ jobs:
           tags: |
             ${{ env.REPOSITORY }}:${{ matrix.target }}
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ matrix.target }}
+
+      - name: Pull new image on runner
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.RUNNER_DEBIAN_HOST }}
+          username: ${{ secrets.RUNNER_DEBIAN_USERNAME }}
+          password: ${{ secrets.RUNNER_DEBIAN_PASSWORD }}
+          script: |
+            docker pull ${{ env.REPOSITORY }}:${{ matrix.target }}
+            docker pull ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ matrix.target }}
