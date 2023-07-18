@@ -19,3 +19,10 @@ RUN apt-get install -y build-essential
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
 
 ENV PATH=$PATH:/root/.cargo/bin
+
+FROM base as go
+
+RUN curl -fsSL https://go.dev/dl/go1.20.6.linux-amd64.tar.gz \
+  | tar -C /usr/local -xz
+
+ENV PATH=$PATH:/usr/local/go/bin

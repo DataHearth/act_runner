@@ -69,7 +69,7 @@ jobs:
 
     strategy:
       matrix:
-        target: [docker, rust]
+        target: [docker, rust, go]
 
     steps:
       - name: Checkout

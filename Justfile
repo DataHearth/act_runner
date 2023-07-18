@@ -2,7 +2,7 @@ set shell := ["zsh", "-uc"]
 
 base_img_name := "datahearth/act_runner"
 gitea_img_name := "gitea.antoine-langlois.net/" + base_img_name
-all_targets := "base docker rust"
+all_targets := "base docker rust go"
 
 alias b := build
 alias p := push
