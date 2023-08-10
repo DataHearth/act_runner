@@ -1,7 +1,6 @@
 FROM debian:bookworm-slim AS base
 
 RUN apt-get update
-
 RUN apt-get install -y git curl vim jq libssl-dev
 
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
@@ -9,8 +8,18 @@ RUN apt-get install -y nodejs
 
 FROM base AS docker
 
-RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-24.0.2.tgz \
-  | tar -xz --strip-components=1 -C /usr/local/bin/ docker/docker
+RUN apt-get install -y gnupg
+
+RUN install -m 0755 -d /etc/apt/keyrings
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+RUN chmod a+r /etc/apt/keyrings/docker.gpg
+RUN echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+RUN apt-get update
+RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 FROM base AS rust
 
