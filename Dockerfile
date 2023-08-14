@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim AS base
 
 RUN apt-get update
-RUN apt-get install -y git curl vim jq libssl-dev
+RUN apt-get install -y git curl vim jq pkg-config libssl-dev
 
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get install -y nodejs
