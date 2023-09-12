@@ -13,6 +13,7 @@ build TARGET:
   @docker build -t {{base_img_name}}:{{TARGET}} \
     --target {{TARGET}} \
     --cache-to type=inline \
+    --cache-from type=registry,ref={{base_img_name}}:base \
     --cache-from type=registry,ref={{base_img_name}}:{{TARGET}} .
   @docker tag {{base_img_name}}:{{TARGET}} {{gitea_img_name}}:{{TARGET}}
 
@@ -27,7 +28,8 @@ build-all:
     docker build -t {{base_img_name}}:$target \
       --target $target \
       --cache-to type=inline \
-      --cache-from type=registry,ref={{base_img_name}}:$target .;
+      --cache-from type=registry,ref={{base_img_name}}:base \
+      --cache-from type=registry,ref={{base_img_name}}:$target .
 
     docker tag {{base_img_name}}:$target {{gitea_img_name}}:$target;
   done

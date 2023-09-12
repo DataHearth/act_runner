@@ -1,14 +1,16 @@
 FROM debian:bookworm-slim AS base
 
 RUN apt-get update
-RUN apt-get install -y git curl vim jq pkg-config libssl-dev
+RUN apt-get install -y git curl vim jq pkg-config libssl-dev gnupg
 
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+
+RUN apt-get update
 RUN apt-get install -y nodejs
 
 FROM base AS docker
-
-RUN apt-get install -y gnupg
 
 RUN install -m 0755 -d /etc/apt/keyrings
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -19,7 +21,7 @@ RUN echo \
   tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 RUN apt-get update
-RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+RUN apt-get install -y docker-ce-cli docker-buildx-plugin
 
 FROM base AS rust
 
